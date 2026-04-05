@@ -287,7 +287,7 @@ The engine implements a quantitative **ITSRM-based** risk assessment:
 
 2. **Asset Risk Level**: An asset's `risk_level` is the maximum risk across all associated threat scenarios.
 
-3. **Relative Risk**: `relative_risk_level = risk_level / importance`, normalizing risk by the asset's business importance rating.
+3. **Relative Risk**: `relative_risk_level = risk_level * importance`, multiply risk level by the asset's business importance rating.
 
 4. **Propagated Risk**: A BFS traversal of the asset relationship graph propagates risks from source assets to connected assets, subject to the criticality thresholds defined in `propagation.csv`. Propagated entities carry a `_p` suffix in Elasticsearch and the OWL ontology.
 
