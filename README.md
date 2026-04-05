@@ -43,17 +43,17 @@ Key characteristics:
 └────────────────────────┬────────────────────────────────┘
                          │ HTTP
 ┌────────────────────────▼────────────────────────────────┐
-│               Flask Application (port 5002)              │
-│                                                          │
-│  ┌──────────────┐   ┌────────────────┐  ┌────────────┐  │
-│  │  app.py      │   │  manager.py    │  │ import_    │  │
-│  │  (routes +   │──▶│  (ontology +   │  │ onto_es.py │  │
-│  │   views)     │   │   risk engine) │  │ (indexing) │  │
-│  └──────────────┘   └────────────────┘  └──────┬─────┘  │
-└─────────────────────────────────────────────────┼────────┘
-                                                  │
-┌─────────────────────────────────────────────────▼────────┐
-│                  Elasticsearch (port 9200)                │
+│               Flask Application (port 5002)             │
+│                                                         │
+│  ┌──────────────┐  ┌────────────────┐  ┌────────────┐   │
+│  │  app.py      │  │  manager.py    │  │ import_    │   │
+│  │  (routes +   │->│  (ontology +   │  │ onto_es.py │   │
+│  │   views)     │  │   risk engine) │  │ (indexing) │   │
+│  └──────────────┘  └────────────────┘  └──────┬─────┘   │
+└───────────────────────────────────────────────┼─────────┘
+                                                │
+┌───────────────────────────────────────────────▼──────────┐
+│                  Elasticsearch (port 9200)               │
 │  Indices: assets │ threats_o/p │ feared_events_o/p │ …   │
 └──────────────────────────────────────────────────────────┘
 ```
@@ -73,14 +73,14 @@ Key characteristics:
 
 | Feature | Description |
 |---|---|
-| **Asset Inventory** | View all system assets with their type, description, importance rating, and computed risk levels |
-| **Threat Scenarios** | Browse threats mapped to feared events and affected assets |
-| **Feared Events** | Inspect feared events with impact dimensions (C/I/A) and likelihood scores |
-| **Risk Propagation View** | Interactive graph showing how risk propagates across the asset relationship network |
-| **Propagation Editor** | Edit the propagation matrix (feared event → threat connections with criticality thresholds) and trigger live re-assessment |
+| **Propagation** | Interactive graph showing how risk propagates across the asset relationship network |
+| **Assets** | View all system assets with their type, description, importance rating, and computed risk levels |
+| **Threats** | Browse original and propagated threats |
+| **Feared Events** | Inspect feared events with impact and likelihood scores |
+| **Risks** | Browse original and propagated risks and inspect system risk indicators |
 | **Risk Matrix** | Quantitative probability × impact scoring based on a configurable risk matrix |
 | **Sortable Tables** | All views support multi-field ascending/descending sorting |
-| **Vulnerability Tracking** | CVE-based vulnerability records linked to affected assets |
+| **Propagation Editor** | Edit the propagation matrix (feared event → threat connections with criticality thresholds) and trigger live re-assessment |
 
 ---
 
@@ -251,6 +251,14 @@ Flags:
 │   ├── app.py                   # Flask application entrypoint and route handlers
 │   ├── images/                  # Static UI icons
 │   ├── logs/                    # Rotating application log files
+│   ├── static/                  # CSS and JS files
+│       ├── css/
+│         ├── assets.css
+│         ├── base.css
+│         └── ...
+│       ├── js/
+  │       ├── assets.js
+  │       └── ...
 │   └── templates/               # Jinja2 HTML templates
 │       ├── base.html
 │       ├── assets.html
