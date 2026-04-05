@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Threats</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/threats.css') }}">
+</head>
+<body>
+    {% include "base.html" %}
+    <div class="container">
+        <div class="main-menu">
+            <a href="{{ url_for('propagation') }}">Propagation</a>
+            <a href="{{ url_for('threats') }}">Threats</a>
+            <a href="{{ url_for('feared_events') }}">Feared Events</a>
+            <a href="{{ url_for('assets') }}">Assets</a>
+            <a href="{{ url_for('risks') }}">Risks</a>
+        </div>
+        <div class="content">
+            <div class="tree-area">
+                <div id="treeDiagram"></div>
+                <div class="legend">
+                    <div class="legend-header">Legend</div>
+                    <div class="legend-content">
+                        <ul>
+                            <li><span class="dot original-threat"></span>Original Threat</li>
+                            <li><span class="dot propagated-threat"></span>Propagated Threat</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="details-panel">
+                <div class="details-title">Threat Details</div>
+                <div class="filter-row">
+                    <span class="filter-label">Only threats generating feared events</span>
+                    <label class="switch" for="filterGeneratesToggle">
+                        <input type="checkbox" id="filterGeneratesToggle" {% if request.args.get('filter') %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <select id="threatSelector">
+                    <option value="">Select a threat</option>
+                </select>
+                <table class="details-table">
+                    <tbody>
+                        <tr>
+                            <th>Threat ID</th>
+                            <td id="detailThreatId">-</td>
+                        </tr>
+                        <tr>
+                            <th>Type</th>
+                            <td id="detailType">-</td>
+                        </tr>
+                        <tr>
+                            <th>Affects</th>
+                            <td id="detailAffects">-</td>
+                        </tr>
+                        <tr>
+                            <th>Generates FE</th>
+                            <td id="detailGenerates">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data elements -->
+    <script id="threats-original-json" type="application/json">{{ threats | tojson }}</script>
+    <script id="threats-propagated-json" type="application/json">{{ threats_p | tojson }}</script>
+    <script id="feared-events-original-json" type="application/json">{{ feared_events | tojson }}</script>
+    <script id="feared-events-propagated-json" type="application/json">{{ feared_events_p | tojson }}</script>
+    <div id="feLink" data-base="{{ url_for('feared_events', fe='__FE__') }}"></div>
+    <div id="filterUrl" data-true="{{ url_for('threats', filter=True) }}" data-false="{{ url_for('threats') }}"></div>
+
+    <!-- External scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/gojs@3.1.2/release/go-debug.js"></script>
+    <script src="{{ url_for('static', filename='js/threats.js') }}"></script>
+</body>
+</html>

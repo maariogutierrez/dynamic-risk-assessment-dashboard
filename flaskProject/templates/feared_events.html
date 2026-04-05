@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Feared Events</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/feared_events.css') }}">
+</head>
+<body>
+    {% include "base.html" %}
+    <div class="container">
+        <div class="main-menu">
+            <a href="{{ url_for('propagation') }}">Propagation</a>
+            <a href="{{ url_for('threats') }}">Threats</a>
+            <a href="{{ url_for('feared_events') }}">Feared Events</a>
+            <a href="{{ url_for('assets') }}">Assets</a>
+            <a href="{{ url_for('risks') }}">Risks</a>
+        </div>
+        <div class="content">
+            <div class="content-container">
+                <div class="container-title">
+                    <h3 onclick="window.location.href='{{ url_for('feared_events') }}'">Feared Events</h3>
+                </div>
+                <div class="filters">
+                    <div class="filter">
+                        <h3>Probability</h3>
+                        {% if request.args.get('sort_field') == 'probability' and request.args.get('sort_order') == 'asc' %}
+                        <img src="{{ url_for('serve_images', filename='asc.png') }}" alt="Ascending" title="Sorted ascending" onclick="window.location.href='{{ url_for('feared_events', sort_field='probability', sort_order='desc') }}'">
+                        {% elif request.args.get('sort_field') == 'probability' and request.args.get('sort_order') == 'desc' %}
+                        <img src="{{ url_for('serve_images', filename='desc.png') }}" alt="Descending" title="Sorted descending" onclick="window.location.href='{{ url_for('feared_events', sort_field='probability', sort_order='asc') }}'">
+                        {% else %}
+                        <img src="{{ url_for('serve_images', filename='sort.png') }}" alt="Sort" title="Not sorted" onclick="window.location.href='{{ url_for('feared_events', sort_field='probability', sort_order='asc') }}'">
+                        {% endif %}
+                    </div>
+                    <div class="filter">
+                        <h3>Impact</h3>
+                        {% if request.args.get('sort_field') == 'impact' and request.args.get('sort_order') == 'asc' %}
+                        <img src="{{ url_for('serve_images', filename='asc.png') }}" alt="Ascending" title="Sorted ascending" onclick="window.location.href='{{ url_for('feared_events', sort_field='impact', sort_order='desc') }}'">
+                        {% elif request.args.get('sort_field') == 'impact' and request.args.get('sort_order') == 'desc' %}
+                        <img src="{{ url_for('serve_images', filename='desc.png') }}" alt="Descending" title="Sorted descending" onclick="window.location.href='{{ url_for('feared_events', sort_field='impact', sort_order='asc') }}'">
+                        {% else %}
+                        <img src="{{ url_for('serve_images', filename='sort.png') }}" alt="Sort" title="Not sorted" onclick="window.location.href='{{ url_for('feared_events', sort_field='impact', sort_order='asc') }}'">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="filter-row">
+                    <span class="filter-label">Show only original feared events</span>
+                    <label class="switch" for="filterOriginalToggle">
+                        <input type="checkbox" id="filterOriginalToggle" {% if request.args.get('filter_original') %}checked{% endif %} onchange="toggleOriginalFilter()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="feared-events-container" id="feContainer">                  
+                    {% if feared_events %}
+                        {% for doc in feared_events %}
+                            <div class="feared-event" id="{{ doc.feared_event_id }}">
+                                <div class="row1">
+                                    <h3>{{ doc.feared_event_id }}</h3>
+                                    <h4>Description:</h4>
+                                    <p>{{ doc.description }}</p>
+                                </div>
+                                <div class="row2">
+                                    <div class="row2col1">
+                                        <h4>Affects: </h4><p title="Click here to see the asset" onclick="window.location.href='{{ url_for('assets', asset=(doc.affects[0] if doc.affects is iterable and doc.affects is not string else doc.affects)) }}';" class="link">{% if doc.affects is iterable and doc.affects is not string %}{{ doc.affects[0] }}{% else %}{{ doc.affects }}{% endif %}</p>
+                                    </div>
+                                    <div class="row2col2">
+                                        <h4>Generates: </h4>{% for a in doc.generates if 'Propagated' in a %}<p title="Click here to see risks table" onclick="window.location.href='{{ url_for('risks', risk=a ) }}';" class="link">{{ a }}</p>{% endfor %}
+                                    </div>
+                                </div>
+                                <div class="row3">
+                                    <div class="row3col1">
+                                        <h4>Probability:</h4>
+                                        <p class="level probability">{{ doc.probability }}</p>
+                                    </div>
+                                    <div class="row3col2">
+                                        <h4>Impact: </h4>
+                                        <p class="level impact">{{ doc.impact }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if not feared_events %}
+                    <div class="fe-section">
+                        <p style="color: #b0b0b0;">No feared events available.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Pass feared_event parameter to JavaScript for highlighting
+        const fearedEventParam = "{{ feared_event }}";
+    </script>
+    <script src="{{ url_for('static', filename='js/feared_events.js') }}"></script>
+</body>
+</html>
+        

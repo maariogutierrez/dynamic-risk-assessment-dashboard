@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Assets</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/assets.css') }}">
+</head>
+<body>
+    {% include "base.html" %}
+    <div class="container">
+        <div class="main-menu">
+            <a href="{{ url_for('propagation') }}">Propagation</a>
+            <a href="{{ url_for('threats') }}">Threats</a>
+            <a href="{{ url_for('feared_events') }}">Feared Events</a>
+            <a href="{{ url_for('assets') }}">Assets</a>
+            <a href="{{ url_for('risks') }}">Risks</a>
+        </div>
+        <div class="content">
+            <div class="content-container">
+                <div class="page-title">
+                    <h3>Assets</h3>
+                </div>
+                <div class="assets-table">
+                    <div class="table">
+                        <table class="data-table">       
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <a href="{{ url_for('assets') }}">
+                                            Asset ID
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="{{ url_for('assets', sort_field='type', sort_order=next_sort_order) }}">
+                                            Type
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="{{ url_for('assets', sort_field='description', sort_order=next_sort_order) }}">
+                                            Description
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="{{ url_for('assets', sort_field='importance', sort_order=next_sort_order) }}">
+                                            Importance
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="{{ url_for('assets', sort_field='risk_level', sort_order=next_sort_order) }}">
+                                            Risk Level
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="{{ url_for('assets', sort_field='propagated_risk_level', sort_order=next_sort_order) }}">
+                                            Propagated Risk Level
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="{{ url_for('assets', sort_field='relative_risk_level', sort_order=next_sort_order) }}">
+                                            Relative Risk Level
+                                        </a>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for asset in assets %}
+                                <tr id="{{ asset.asset_id }}">
+                                    <td>{{ asset.asset_id }}</td>
+                                    <td>{{ asset.type }}</td>
+                                    <td>{{ asset.description }}</td>
+                                    <td><p class="importance-level">{{ asset.importance }}</p></td>
+                                    <td><p class="level">{{ asset.risk_level }}</p></td>
+                                    <td><p class="level">{{ asset.propagated_risk_level }}</p></td>
+                                    <td><p class="level">{{ asset.relative_risk_level }}</p></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+    <script>
+        // Pass data to JavaScript
+        window.assetParam = "{{ asset }}";
+    </script>
+    <script src="{{ url_for('static', filename='js/assets.js') }}"></script>
+</body>
+</html>

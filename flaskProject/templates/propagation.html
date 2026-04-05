@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Propagation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/propagation.css') }}">
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<body>
+    {% include "base.html" %}
+    <div class="container">
+        <div class="main-menu">
+            <a href="{{ url_for('propagation') }}">Propagation</a>
+            <a href="{{ url_for('threats') }}">Threats</a>
+            <a href="{{ url_for('feared_events') }}">Feared Events</a>
+            <a href="{{ url_for('assets') }}">Assets</a>
+            <a href="{{ url_for('risks') }}">Risks</a>
+        </div>
+        <div class="content">
+            <div class="filters">
+                <select onchange= "window.location.href=this.value+'&show_few='+(document.getElementById('show_few').checked?'true':'false')">
+                    <option value="" disabled selected>Original Threat</option>
+                    {% for threat in threats_o %}
+                        <option {% if request.args.get('threat') == threat.threat_id %}selected{% endif %} value="{{ url_for('propagation', threat=threat.threat_id) }}">{{ threat.threat_id }}</option>
+                    {% endfor %}
+                </select>
+                <select onchange= "window.location.href=this.value+'&show_few='+(document.getElementById('show_few').checked?'true':'false')">
+                    <option value="" disabled selected>Original Feared Event</option>
+                    {% for fe in feared_events_o %}
+                        <option {% if request.args.get('feared_event') == fe.feared_event_id %}selected{% endif %} value="{{ url_for('propagation', feared_event=fe.feared_event_id) }}">{{ fe.feared_event_id }}</option>
+                    {% endfor %}
+                </select>
+                <div class="filter-row">
+                    <span class="filter-label">Show only Threats that generate FE</span>
+                    <label class="switch" for="show_few">
+                        <input
+                        type="checkbox"
+                        onchange="
+                            const p = new URLSearchParams(window.location.search);
+                            p.set('show_few', this.checked ? 'true' : 'false');
+                            window.location.search = p.toString();
+                        "
+                        id="show_few"
+                        {% if request.args.get('show_few','false') in ['true','True','1'] %}checked{% endif %}
+                        />
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="workspace">
+                <div class="network-container">
+                    <div id="network"></div>
+                    <div class="legend">
+                        <div class="legend-header">Legend</div>
+                        <div class="legend-content">
+                            <ul>
+                                <li class="legend-item" data-group="threats"><img src="../images/threat.png" alt="Threat" class="legend-icon"/> Threat</li>
+                                <li class="legend-item" data-group="feared_events"><img src="../images/feared_event.png" alt="Feared Event" class="legend-icon"/> Feared Event</li>
+                                <li class="legend-item" data-group="assets"><img src="../images/asset.png" alt="Asset" class="legend-icon"/> Asset</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>        
+                <div class="details-panel">
+                    <div class="details-title">Node Details</div>
+                    <div class="details-subtitle" id="detailHint">Click a node in the propagation graph to inspect it.</div>
+                    <table class="details-table">
+                        <tbody>
+                            <tr>
+                                <th>Type</th>
+                                <td id="detailType">-</td>
+                            </tr>
+                            <tr>
+                                <th>ID</th>
+                                <td id="detailId">-</td>
+                            </tr>
+                            <tr>
+                                <th>Description</th>
+                                <td id="detailDescription">-</td>
+                            </tr>
+                            <tr>
+                                <th>Importance</th>
+                                <td id="detailImportance">-</td>
+                            </tr>
+                            <tr>
+                                <th>Affects</th>
+                                <td id="detailAffects">-</td>
+                            </tr>
+                            <tr>
+                                <th>Generates</th>
+                                <td id="detailGenerates">-</td>
+                            </tr>
+                            <tr>
+                                <th>Propagates To</th>
+                                <td id="detailPropagatesTo">-</td>
+                            </tr>
+                            <tr>
+                                <th>Risk Level</th>
+                                <td id="detailRiskLevel">-</td>
+                            </tr>
+                            <tr>
+                                <th>Propagated Risk</th>
+                                <td id="detailPropagatedRiskLevel">-</td>
+                            </tr>
+                            <tr>
+                                <th>Relative Risk Level</th>
+                                <td id="detailRelativeRiskLevel">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Initialize backend data with Jinja2 templates
+        var threatsData = {{ threats_p | tojson }};
+        var fearedEventsData = {{ feared_events_p | tojson }};
+        var assetsData = {{ assets | tojson }};
+        var relationshipsData = {{ relationships | tojson }};
+        var threatOriginal = {{ threat_o | tojson }};
+        var fearedEventOriginal = {{ feared_event_o | tojson }};
+    </script>
+    <script src="{{ url_for('static', filename='js/propagation.js') }}"></script>
+</body>
+</html>

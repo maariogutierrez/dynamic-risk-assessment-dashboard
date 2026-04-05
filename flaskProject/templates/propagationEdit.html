@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Propagation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/propagationEdit.css') }}">
+</head>
+<body>
+    {% include "base.html" %}
+    <div class="container">
+        <div id="info">
+            <h2>Propagation Configuration</h2>
+            <p>Manage impact propagation by mapping feared events and threats against minimum criticality thresholds.</p>
+            <button onclick="newPropagation()" id="newPropagation">Create new configuration</button>
+        </div>
+        
+        <div class="table">
+            <table id="propagation-table">
+                <thead>
+                    <tr>
+                        <th>
+                            Feared Event
+                        </th>
+                        <th>
+                            Threat
+                        </th>
+                        <th>
+                            Minimum Criticality
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doc in propagation %}
+                        <tr>
+                            <td align="center" id='propagation-fe-{{ propagation.index(doc) }}'>{{ doc[0] }}</td>
+                            <td align="center" id='propagation-threat-{{ propagation.index(doc) }}'>{{ doc[1] }}</td>
+                            <td align="center"><input id='propagation-criticality-{{ propagation.index(doc) }}' type="number" min="1" max="3" step="1" value="{{ doc[2] }}" /></td>
+                            <td align="center" class="actions-cell">
+                                <button type="button" class="delete-btn" title="Delete row">X</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="buttons">
+            <button id="goToPropagationBtn" type="button" onclick="handleGoToPropagation()">Go to propagation</button>
+        </div>
+    </div>
+
+    <!-- Data elements for JavaScript -->
+    <script id="fe-data" type="application/json">{{ fe | tojson | safe }}</script>
+    <script id="threat-data" type="application/json">{{ threat | tojson | safe }}</script>
+    <div id="propagation-url" data-url="{{ url_for('propagation') }}"></div>
+
+    <!-- External scripts -->
+    <script src="{{ url_for('static', filename='js/propagationEdit.js') }}"></script>
+</body>
+</html>

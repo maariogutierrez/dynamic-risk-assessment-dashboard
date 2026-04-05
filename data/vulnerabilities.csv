@@ -1,0 +1,2 @@
+vulnerability_id,date_detected,affected_asset,cve,severity,status,score_base
+004_CVE-2022-3219,2026-02-23T10:52:00.820Z,004,CVE-2022-3219,Low,Unknown,3.3

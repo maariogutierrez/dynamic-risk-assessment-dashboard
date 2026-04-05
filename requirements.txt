@@ -1,0 +1,6 @@
+elasticsearch==8.17.1
+Flask==2.1.2
+Werkzeug==2.1.2
+owlready2==0.47
+pandas==2.2.3
+openpyxl==3.1.5

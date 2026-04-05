@@ -1,0 +1,4 @@
+type,FE,asset,likelihood,dimensions
+Correo de Phising,Instalación de Malware,Activo_1,4,CIA
+Secuestro de Sesión,Compromiso de Cuenta Admin,Activo_2,4,CIA
+Ransomware,Cifrado de Archivos Críticos,Ordenador,4,A

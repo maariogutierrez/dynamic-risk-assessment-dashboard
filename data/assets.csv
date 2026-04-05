@@ -1,0 +1,5 @@
+id,class,name,importance
+Activo_1,Hardware,Ordenador,0.9
+Activo_2,Funciones,Servidor de Identidad,1
+Activo_3,Hardware,Terminal CCTV,0.4
+Activo_4,Datos,Sistema de Gestión de Logs,0.7

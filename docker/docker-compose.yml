@@ -1,0 +1,32 @@
+version: '3'
+services:
+  elasticsearch:
+    image: elasticsearch:8.8.0
+    ports:
+      - "9201:9200"
+      - "9300:9300"
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms4g -Xmx8g
+    mem_limit: 8g
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:9200 >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+
+  dra-dashboard:
+    image: maariogutierrez/dra-dashboard:latest
+    container_name: dra-dashboard
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "5002:5002"
+    restart: always
