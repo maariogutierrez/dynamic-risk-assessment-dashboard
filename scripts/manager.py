@@ -8,8 +8,7 @@ system architecture.
 Core Responsibilities:
   1. Ontology Management: Load, parse, and persist OWL ontology files representing
      system architecture, threats, and risks.
-  2. Data Ingestion: Import asset catalogs, threat scenarios, and historical incident
-     data from CSV files into the ontology.
+  2. Data Ingestion: Import asset catalogs and threat scenarios from CSV files into the ontology.
   3. Risk Propagation: Implement threat propagation algorithms to discover secondary
      risks resulting from cascading failures through system relationships.
   4. Risk Calculation: Compute risk scores using quantitative risk assessment matrices
@@ -29,7 +28,6 @@ Data Files Expected:
   - threat_scenarios.csv: Threat-to-feared-event mappings
   - threat_assets.csv: Threat-to-asset associations
   - fe.csv: Feared event descriptions and impacts
-  - incidents.csv: Historical security incidents
   - matrix.csv: Risk assessment matrix (probability vs. impact)
   - propagation.csv: Propagation rules (feared event → threat connections)
   - system.csv: System-level metadata
@@ -208,7 +206,7 @@ def load_assets(o_a, path="../data"):
         # == Asset Creation Pass ==
         # Load the asset catalog from CSV and create individuals in the ontology.
         assets = pd.read_csv(f'{path}/assets.csv')
-        for index, row in assets.iterrows():
+        for _, row in assets.iterrows():
             logger.debug(f"Loading asset {row['id']}")
             # Create asset individual under the base Assets class.
             instance = o_a.Assets(f"{row['id']}")
@@ -221,7 +219,7 @@ def load_assets(o_a, path="../data"):
         # After all assets exist, create relationship individuals.
         # This two-pass approach ensures references are valid.
         relationships = pd.read_csv(f'{path}/assets_relationships.csv', dtype={"from_asset": str, "to_asset": str})
-        for index_r, row_r in relationships.iterrows():
+        for _, row_r in relationships.iterrows():
             bidirectional = row_r['bidirectional']
             # Look up source and target assets by their IRI (Internationalized Resource Identifier).
             from_asset = o_a.search_one(iri=f"*#{row_r['from_asset']}")
@@ -310,7 +308,6 @@ def risk_assessment(path="../data"):
     # == Phase 1: Threat & Propagation Loading ==
     # Load threats from CSV and execute threat propagation algorithm.
     load_threats(onto, path, propagation_paths)
-    load_incidents(onto, path)
     onto.save(f"{path}/dra_full.owl")
     propagate_time = time.time()
     logger.info(f"Propagate time: {propagate_time - init_time} seconds")
@@ -351,64 +348,11 @@ def load_threats(o_t, path="../data", propagation_paths=None):
     with o_t:
         # Load threat-to-asset associations from CSV.
         threats = pd.read_csv(f'{path}/threat_assets.csv', dtype={"asset": str})
-        for index, row in threats.iterrows():
+        for _, row in threats.iterrows():
             # Create a threat for each row in the threat_assets CSV.
-            create_threat(index, o_t, row["threat"], str(row["asset"]), path=path, propagation_paths=propagation_paths)
+            create_threat(o_t, row["threat"], str(row["asset"]), path=path, propagation_paths=propagation_paths)
 
-
-def ingest_threat(onto, threat, asset, incident_name, description, date, path="../data"):
-    """Real-time threat ingestion (e.g., from security monitoring systems).
-    
-    Allows dynamic insertion of threats into an already-loaded ontology without
-    requiring full re-processing. Updates the ontology and recalculates affected
-    asset risks, then persists changes to disk.
-    
-    Use this when threats are detected at runtime and need to be incorporated
-    into the risk model immediately.
-    
-    Args:
-        onto: owlready2 ontology object (can be None, in which case it's loaded).
-        threat: String name of the threat to create.
-        asset: Target asset ID for the threat.
-        incident_name: Name for the associated incident record.
-        description: Free-text description of the incident.
-        date: Incident date in ISO format (e.g., "2024-01-15T10:30:00").
-        path: Filesystem path to data directory. Defaults to "../data".
-        
-    Returns:
-        String: The name of the created threat individual (e.g., "Threat_0_1"),
-                or None if threat creation failed (e.g., asset not found).
-                
-    Performance:
-        O(n) where n = propagation depth (BFS traversal of threat graph).
-        Followed by O(m) risk recalculation where m = number of affected assets.
-    """
-    logger.debug(f"Ingesting threat {threat} over asset {asset}")
-    propagation_paths = defaultdict(list)
-    
-    # Load ontology if not provided (support for both stateless and stateful usage).
-    if onto is None:
-        w = World()
-        onto = w.get_ontology(f"{path}/dra_full.owl").load() 
-    
-    # Create the threat and associated feared events via propagation.
-    threat = create_threat("-", onto, threat, asset, path, propagation_paths)
-    if threat:
-        # Create an incident record linking the threat to its real-world origin.
-        create_incident(onto, incident_name, description, date, threat.name, asset)
-    onto.save(f"{path}/dra_full.owl")
-
-    # Recalculate all affected risks (ideally, only recalculate propagation tree).
-    calculate_risk_asset(onto, path=path)
-    propagated_risk_asset(onto)
-    calculate_total_risk(onto, path=path)
-    calculate_total_propagated_risk(onto, path=path)
-    onto.save(f"{path}/dra_full.owl")
-
-    if threat:
-        return threat.name
-
-def create_threat(index, o_t, threat, asset, path="../data", propagation_paths=None):
+def create_threat(o_t, threat, asset, path="../data", propagation_paths=None):
     """Create a threat individual in the ontology and trigger feared event creation.
     
     Creates a Threat_Original individual linked to a specific asset. For each threat,
@@ -419,9 +363,6 @@ def create_threat(index, o_t, threat, asset, path="../data", propagation_paths=N
     4. Initiates threat propagation to discover secondary threats
     
     Args:
-        index: Integer index of the threat in the source CSV file. Used to check
-               for corresponding incident records. Pass "-" for real-time ingestion
-               (skips incident CSV lookup).
         o_t: owlready2 ontology object.
         threat: String name of the threat (e.g., "SQL Injection").
         asset: String ID of the target asset.
@@ -452,139 +393,13 @@ def create_threat(index, o_t, threat, asset, path="../data", propagation_paths=N
             ind.is_a.append(o_t.Threat)  # Mark as base threat class.
             ind.affects.append(asset)
             
-            # If this threat came from CSV (not real-time ingestion), check incidents.
-            if index != "-":
-                check_incident(index, asset, ind, path)
-            
             # Generate feared events that this threat can trigger.
             create_feared_event(o_t, asset, ind, path, propagation_paths=propagation_paths)
             return ind
         else:
             logger.warning(f"Creating threat {threat} over non existing asset. Ignoring")
             return None
-        
-def check_incident(index, asset, threat, path="../data"):
-    """Verify and synchronize incident records with threat creation.
-    
-    When threats are created from CSV (not real-time ingestion), this function
-    ensures corresponding incident records exist in the incidents.csv file. This
-    provides a clean audit trail of when threats were introduced into the system.
-    
-    The function handles two scenarios:
-    1. Missing incident: Creates a new row in incidents.csv at the appropriate position
-    2. Incomplete incident: Updates an existing incident row with threat information
-    
-    Args:
-        index: Row index in the source threat_assets.csv where this threat came from.
-        asset: owlready2 Asset individual object.
-        threat: owlready2 Threat individual object.
-        path: Filesystem path to data directory. Defaults to "../data".
-        
-    Side Effects:
-        - May modify incidents.csv on disk (appends or updates rows)
-        - Adds new incidents with timestamp (current time in Europe/Madrid timezone)
-    """
-    incidents = pd.read_csv(f'{path}/incidents.csv', dtype={"affects": str})
-
-    # Extract threat and asset names from ontology generated IRIs.
-    t = str(threat).split('.')[1].rsplit("_", 1)[0]
-    a = str(asset).split(".")[1]
-
-    # Check if this incident already exists at the expected row index.
-    if index >= len(incidents):
-        exists = False
-        partially_exists = False
-    else:
-        asset_2 = incidents.loc[index, "affects"]
-        threat_type_2 = incidents.loc[index, "generates"]
-        
-        # Full match: both asset and threat already recorded.
-        exists = (a == asset_2 and t == str(threat_type_2))
-        # Partial match: asset exists but threat not recorded.
-        partially_exists = (a == asset_2)
-
-    # == Case 1: Incident does not exist → insert new row ==
-    if not exists and not partially_exists:
-        date = datetime.now(ZoneInfo("Europe/Madrid")).strftime("%Y-%m-%dT%H:%M:%S.%f%z")
-        new = {
-            "incident_name": t.replace("_", " "),
-            "description": t.replace("_", " "),
-            "date": date,
-            "generates": str(threat).split('.')[1],
-            "affects": a
-        }
-
-        # Insert new row at the appropriate position without deleting existing rows.
-        df2 = pd.concat(
-            [incidents.iloc[:index], pd.DataFrame([new]), incidents.iloc[index:]],
-            ignore_index=True
-        )
-        df2.to_csv(f'{path}/incidents.csv', index=False)
-
-    # == Case 2: Incident exists but is incomplete → update ==
-    if partially_exists:
-        # Update the existing incident row with the threat information.
-        incidents.loc[index, "generates"] = str(threat).split('.')[1]
-        incidents.to_csv(f'{path}/incidents.csv', index=False)
-        
-def load_incidents(o_t, path="../data"):
-    """Load historical incident records from CSV into the ontology.
-    
-    Creates Incident individuals in the ontology to represent real-world security
-    events. Incidents are linked to the threats they represent and the assets they
-    affected. This data is primarily for visualization and audit purposes and does
-    not directly affect risk calculations.
-    
-    Args:
-        o_t: owlready2 ontology object.
-        path: Filesystem path to data directory. Defaults to "../data".
-              Expected file: incidents.csv
-    """
-    with o_t:
-        incidents = pd.read_csv(f'{path}/incidents.csv', dtype={"affects": str})
-        for index, row in incidents.iterrows():
-            create_incident(o_t, row["incident_name"], row["description"], row["date"], 
-                          row["generates"], row["affects"])
-
-
-def create_incident(o_t, incident_name, description, date, generates, affects):
-    """Create an Incident individual in the ontology.
-    
-    Incidents represent real-world security events that can be linked to threats
-    and assets for audit trail purposes. An incident is characterized by:
-    - A descriptive name and details
-    - A date/timestamp
-    - The threat it manifested as
-    - The asset(s) it affected
-    
-    Args:
-        o_t: owlready2 ontology object.
-        incident_name: Human-readable name of the incident.
-        description: Free-text description of the incident.
-        date: Incident date in ISO format (e.g., "2024-01-15T10:30:00.000000+0100").
-        generates: Threat ID that this incident triggered/manifested as.
-        affects: Asset ID that was affected by this incident.
-        
-    Side Effects:
-        Logs warnings if the referenced threat or asset cannot be found in the ontology.
-    """
-    with o_t:
-        # Look up the asset affected by the incident.
-        affects = o_t.search_one(iri=f"*#{affects}")
-        # Look up the threat that the incident generated.
-        generates = o_t.search_one(iri=f"*#{generates}")
-        
-        if affects and generates:
-            logger.debug(f"Creating incident {incident_name} over asset {affects}")
-            # Create incident individual.
-            ind = o_t.Incident()
-            ind.description = description
-            ind.date = date
-            ind.generates.append(generates)
-            ind.affects.append(affects)
-        else:
-            logger.warning(f"Creating incident {incident_name} over non existing asset or threat. Ignoring")
-
+  
 def create_feared_event(o_fe, asset, threat, path="../data", propagation_id=None, propagation_paths=None):
     """Create original feared events triggered by a threat on an asset.
     

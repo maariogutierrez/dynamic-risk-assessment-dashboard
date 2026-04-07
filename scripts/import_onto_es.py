@@ -129,7 +129,6 @@ def onto_to_ES(es, onto=None, path="../data/", reset=False):
         - assets: System assets and their risk metrics
         - threats_o, threats_p: Original and propagated threat scenarios
         - feared_events_o, feared_events_p: Original and propagated feared events
-        - incidents: Historical cybersecurity incidents
         - potential_risks_o, potential_risks_p: Original and propagated risk scenarios
         - relationships: Asset-to-asset relationships
         - system: System-wide aggregate risk metrics
@@ -176,7 +175,6 @@ def onto_to_ES(es, onto=None, path="../data/", reset=False):
     threats_p = [t for t in onto.Threat_Propagated.instances() if onto.Threat_Propagated in t.is_a]
     feared_events_o = [fe for fe in onto.FE_Original.instances() if onto.FE_Original in fe.is_a] 
     feared_events_p = [fe for fe in onto.FE_Propagated.instances() if onto.FE_Propagated in fe.is_a] 
-    incidents =  onto.Incident.instances()
     potential_risks_o = [pr for pr in onto.PR_Original.instances() if onto.PR_Original in pr.is_a]
     potential_risks_p = [pr for pr in onto.PR_Propagated.instances() if onto.PR_Propagated in pr.is_a]
     relationships = onto.Relationship.instances()
@@ -191,7 +189,6 @@ def onto_to_ES(es, onto=None, path="../data/", reset=False):
         "threats_p",
         "feared_events_o",
         "feared_events_p",
-        "incidents",
         "potential_risks_o",
         "potential_risks_p",
         "relationships",
@@ -321,32 +318,6 @@ def onto_to_ES(es, onto=None, path="../data/", reset=False):
         "feared_event_id",
     )
     logger.debug("Feared events uploaded to ES in bulk")
-
-    # == Incident Document Building ==
-    # Creates documents from historical incident records. Each incident represents
-    # a real-world security event and links it to the assets it affected and the
-    # risks it generated.
-    incidents_docs = []
-    for incident in incidents:
-        incident_affects = [asset.name for asset in incident.affects]
-        incident_generates = [risk.name for risk in incident.generates]
-        incidents_docs.append(
-            {
-                "incident_id": incident.name,
-                "description": incident.description,
-                "date": incident.date,
-                "affects": incident_affects[0] if incident_affects else None,  # Primary affected asset
-                "generates": incident_generates[0] if incident_generates else None,  # Primary generated risk
-            }
-        )
-
-    _bulk_index(
-        es,
-        "incidents",
-        incidents_docs,
-        "incident_id",
-    )
-    logger.debug("Incidents uploaded to ES in bulk")
 
     # == Original Potential Risk Document Building ==
     # Creates documents for user-defined potential risks. Risks are the actual outcomes
