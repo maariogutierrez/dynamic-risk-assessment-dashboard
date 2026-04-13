@@ -95,7 +95,6 @@ The application reads from CSV files in `data/` and persists a computed OWL onto
 | `threat_scenarios.csv` | Threat → feared event → asset mappings with likelihood and CIA dimensions |
 | `threat_assets.csv` | Direct threat-to-asset associations |
 | `fe.csv` | Feared event descriptions and impact metadata |
-| `incidents.csv` | Historical security incident records |
 | `matrix.csv` | Risk matrix (rows = likelihood, columns = impact) |
 | `propagation.csv` | Propagation rules: feared event → threat with minimum criticality threshold |
 | `vulnerabilities.csv` | CVE records with severity, score, and affected asset |
