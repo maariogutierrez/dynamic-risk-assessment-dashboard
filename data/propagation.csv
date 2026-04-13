@@ -1,4 +1,5 @@
 fe,threat,min_criticality
-Instalación de Malware,Secuestro de Sesión,3
-Compromiso de Cuenta Admin,Movimiento Lateral,2
-Compromiso de Cuenta Admin,Ransomware,3
+Fuga de Información Sensible,Movimiento Lateral,2
+Elevación de Privilegios,Movimiento Lateral,3
+Compromiso Total de Identidad,Secuestro de Sesión,3
+Exfiltración de Llaves API,Malware,2

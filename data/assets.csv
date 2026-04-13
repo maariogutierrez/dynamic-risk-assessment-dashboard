@@ -1,5 +1,6 @@
 id,class,name,importance
-Activo_1,Hardware,Ordenador,0.9
-Activo_2,Funciones,Servidor de Identidad,1
-Activo_3,Hardware,Terminal CCTV,0.4
-Activo_4,Datos,Sistema de Gestión de Logs,0.7
+Activo_1,Software,Portal de Ventas (Web),0.8
+Activo_2,Datos,Base de Datos de Clientes,0.9
+Activo_3,Hardware,Estación de Trabajo Admin,0.7
+Activo_4,Funciones,Directorio Activo,1.0
+Activo_5,Software,Panel de Control Cloud,0.85

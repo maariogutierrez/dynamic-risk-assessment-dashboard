@@ -1,4 +1,5 @@
 from_asset,to_asset,bidirectional,criticality
-Activo_1,Activo_2,True,3
-Activo_1,Activo_3,False,1
-Activo_2,Activo_4,False,2
+Activo_1,Activo_2,False,2
+Activo_3,Activo_4,True,3
+Activo_4,Activo_5,False,3
+Activo_5,Activo_3,False,2

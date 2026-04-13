@@ -1,0 +1,547 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xml:base="http://www.semanticweb.org/carmen.szas/ontologies/2024/10/dra"
+         xmlns="http://www.semanticweb.org/carmen.szas/ontologies/2024/10/dra#"
+         xmlns:webp="http://webprotege.stanford.edu/">
+
+<owl:Ontology rdf:about="http://www.semanticweb.org/carmen.szas/ontologies/2024/10/dra"/>
+
+<owl:ObjectProperty rdf:about="#affects">
+  <owl:inverseOf rdf:resource="#is_affected_by"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#is_affected_by"/>
+
+<owl:ObjectProperty rdf:about="#generates"/>
+
+<owl:ObjectProperty rdf:about="#propagates_to"/>
+
+<owl:ObjectProperty rdf:about="#source_of"/>
+
+<owl:ObjectProperty rdf:about="#target_of"/>
+
+<owl:DatatypeProperty rdf:about="http://webprotege.stanford.edu/relative_risk_level">
+  <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topDataProperty"/>
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">relative_risk_level</rdfs:label>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#criticality">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#description">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#impact">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#importance">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#probability">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#propagated_risk_level">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#risk_level">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#threatened">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#type">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:Class rdf:about="#Assets">
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#source_of"/>
+      <owl:someValuesFrom rdf:resource="#Relationship"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#target_of"/>
+      <owl:someValuesFrom rdf:resource="#Relationship"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="http://webprotege.stanford.edu/relative_risk_level"/>
+      <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#description"/>
+      <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#importance"/>
+      <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#propagated_risk_level"/>
+      <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#risk_level"/>
+      <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#threatened"/>
+      <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#type"/>
+      <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#Relationship">
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#criticality"/>
+      <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#FE_Original">
+  <rdfs:subClassOf rdf:resource="#Feared_Event"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Feared_Event">
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#affects"/>
+      <owl:someValuesFrom rdf:resource="#Assets"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#generates"/>
+      <owl:someValuesFrom rdf:resource="#Potential_Risk"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#propagates_to"/>
+      <owl:someValuesFrom rdf:resource="#Threat_Propagated"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#description"/>
+      <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#impact"/>
+      <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#probability"/>
+      <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#Potential_Risk">
+  <rdfs:subClassOf rdf:resource="#Risk"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Threat_Propagated">
+  <rdfs:subClassOf rdf:resource="#Threat"/>
+</owl:Class>
+
+<owl:Class rdf:about="#FE_Propagated">
+  <rdfs:subClassOf rdf:resource="#Feared_Event"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Risk">
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="http://webprotege.stanford.edu/relative_risk_level"/>
+      <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#impact"/>
+      <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#probability"/>
+      <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#risk_level"/>
+      <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#Threat">
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#affects"/>
+      <owl:someValuesFrom rdf:resource="#Assets"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#generates"/>
+      <owl:someValuesFrom rdf:resource="#Feared_Event"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#type"/>
+      <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#PR_Original">
+  <rdfs:subClassOf rdf:resource="#Potential_Risk"/>
+</owl:Class>
+
+<owl:Class rdf:about="#PR_Propagated">
+  <rdfs:subClassOf rdf:resource="#Potential_Risk"/>
+</owl:Class>
+
+<owl:Class rdf:about="#System">
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#propagated_risk_level"/>
+      <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#risk_level"/>
+      <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#Threat_Original">
+  <rdfs:subClassOf rdf:resource="#Threat"/>
+</owl:Class>
+
+<owl:NamedIndividual rdf:about="#Combat_Cloud">
+  <rdf:type rdf:resource="#System"/>
+  <risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">29</risk_level>
+  <propagated_risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">50</propagated_risk_level>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Activo_1">
+  <rdf:type rdf:resource="#Assets"/>
+  <source_of rdf:resource="#rel_Activo_1_Activo_2"/>
+  <importance rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.8</importance>
+  <type rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Software</type>
+  <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Portal de Ventas (Web)</description>
+  <threatened rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</threatened>
+  <risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">36</risk_level>
+  <propagated_risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">36</propagated_risk_level>
+  <webp:relative_risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">29</webp:relative_risk_level>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#rel_Activo_1_Activo_2">
+  <rdf:type rdf:resource="#Relationship"/>
+  <criticality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</criticality>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Activo_2">
+  <rdf:type rdf:resource="#Assets"/>
+  <target_of rdf:resource="#rel_Activo_1_Activo_2"/>
+  <importance rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.9</importance>
+  <type rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Datos</type>
+  <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Base de Datos de Clientes</description>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Activo_3">
+  <rdf:type rdf:resource="#Assets"/>
+  <source_of rdf:resource="#rel_Activo_3_Activo_4"/>
+  <target_of rdf:resource="#rel_Activo_4_Activo_3"/>
+  <target_of rdf:resource="#rel_Activo_5_Activo_3"/>
+  <importance rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.7</importance>
+  <type rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hardware</type>
+  <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Estación de Trabajo Admin</description>
+  <threatened rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</threatened>
+  <risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">32</risk_level>
+  <propagated_risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">32</propagated_risk_level>
+  <webp:relative_risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">23</webp:relative_risk_level>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#rel_Activo_3_Activo_4">
+  <rdf:type rdf:resource="#Relationship"/>
+  <criticality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</criticality>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#rel_Activo_4_Activo_3">
+  <rdf:type rdf:resource="#Relationship"/>
+  <criticality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</criticality>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#rel_Activo_5_Activo_3">
+  <rdf:type rdf:resource="#Relationship"/>
+  <criticality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</criticality>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Activo_4">
+  <rdf:type rdf:resource="#Assets"/>
+  <target_of rdf:resource="#rel_Activo_3_Activo_4"/>
+  <source_of rdf:resource="#rel_Activo_4_Activo_3"/>
+  <source_of rdf:resource="#rel_Activo_4_Activo_5"/>
+  <importance rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1.0</importance>
+  <type rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Funciones</type>
+  <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Directorio Activo</description>
+  <propagated_risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">50</propagated_risk_level>
+  <webp:relative_risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">50</webp:relative_risk_level>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#rel_Activo_4_Activo_5">
+  <rdf:type rdf:resource="#Relationship"/>
+  <criticality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</criticality>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Activo_5">
+  <rdf:type rdf:resource="#Assets"/>
+  <target_of rdf:resource="#rel_Activo_4_Activo_5"/>
+  <source_of rdf:resource="#rel_Activo_5_Activo_3"/>
+  <importance rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.85</importance>
+  <type rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Software</type>
+  <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Panel de Control Cloud</description>
+  <propagated_risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">28</propagated_risk_level>
+  <webp:relative_risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">24</webp:relative_risk_level>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Inyección_SQL_0">
+  <rdf:type rdf:resource="#Threat_Original"/>
+  <rdf:type rdf:resource="#Threat"/>
+  <affects rdf:resource="#Activo_1"/>
+  <generates rdf:resource="#Fuga de Información Sensible_o_0"/>
+  <generates rdf:resource="#Interrupción del Servicio Web_o_0"/>
+  <type rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Inyección SQL</type>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Fuga de Información Sensible_o_0">
+  <rdf:type rdf:resource="#FE_Original"/>
+  <rdf:type rdf:resource="#Feared_Event"/>
+  <affects rdf:resource="#Activo_1"/>
+  <generates rdf:resource="#Potential_Risk_Fuga de Información Sensible_o_0"/>
+  <generates rdf:resource="#Potential_Propagated_Risk_Fuga de Información Sensible_o_0"/>
+  <propagates_to rdf:resource="#Movimiento_Lateral_0"/>
+  <probability rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</probability>
+  <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Fuga de Información Sensible</description>
+  <impact rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</impact>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Potential_Risk_Fuga de Información Sensible_o_0">
+  <rdf:type rdf:resource="#PR_Original"/>
+  <rdf:type rdf:resource="#Risk"/>
+  <rdf:type rdf:resource="#Potential_Risk"/>
+  <probability rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</probability>
+  <impact rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</impact>
+  <risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">36</risk_level>
+  <webp:relative_risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">29</webp:relative_risk_level>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Potential_Propagated_Risk_Fuga de Información Sensible_o_0">
+  <rdf:type rdf:resource="#PR_Propagated"/>
+  <rdf:type rdf:resource="#Risk"/>
+  <rdf:type rdf:resource="#Potential_Risk"/>
+  <probability rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</probability>
+  <impact rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</impact>
+  <risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">36</risk_level>
+  <webp:relative_risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">29</webp:relative_risk_level>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Movimiento_Lateral_0">
+  <rdf:type rdf:resource="#Threat_Propagated"/>
+  <rdf:type rdf:resource="#Threat"/>
+  <affects rdf:resource="#Activo_2"/>
+  <type rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Movimiento Lateral</type>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Interrupción del Servicio Web_o_0">
+  <rdf:type rdf:resource="#FE_Original"/>
+  <rdf:type rdf:resource="#Feared_Event"/>
+  <affects rdf:resource="#Activo_1"/>
+  <generates rdf:resource="#Potential_Risk_Interrupción del Servicio Web_o_0"/>
+  <generates rdf:resource="#Potential_Propagated_Risk_Interrupción del Servicio Web_o_0"/>
+  <probability rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</probability>
+  <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Interrupción del Servicio Web</description>
+  <impact rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</impact>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Potential_Risk_Interrupción del Servicio Web_o_0">
+  <rdf:type rdf:resource="#PR_Original"/>
+  <rdf:type rdf:resource="#Risk"/>
+  <rdf:type rdf:resource="#Potential_Risk"/>
+  <probability rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</probability>
+  <impact rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</impact>
+  <risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">18</risk_level>
+  <webp:relative_risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">15</webp:relative_risk_level>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Potential_Propagated_Risk_Interrupción del Servicio Web_o_0">
+  <rdf:type rdf:resource="#PR_Propagated"/>
+  <rdf:type rdf:resource="#Risk"/>
+  <rdf:type rdf:resource="#Potential_Risk"/>
+  <probability rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</probability>
+  <impact rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</impact>
+  <risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">18</risk_level>
+  <webp:relative_risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">15</webp:relative_risk_level>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Malware_0">
+  <rdf:type rdf:resource="#Threat_Original"/>
+  <rdf:type rdf:resource="#Threat"/>
+  <affects rdf:resource="#Activo_3"/>
+  <generates rdf:resource="#Elevación de Privilegios_o_0"/>
+  <type rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Malware</type>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Elevación de Privilegios_o_0">
+  <rdf:type rdf:resource="#FE_Original"/>
+  <rdf:type rdf:resource="#Feared_Event"/>
+  <affects rdf:resource="#Activo_3"/>
+  <generates rdf:resource="#Potential_Risk_Elevación de Privilegios_o_0"/>
+  <generates rdf:resource="#Potential_Propagated_Risk_Elevación de Privilegios_o_0"/>
+  <propagates_to rdf:resource="#Movimiento_Lateral_1"/>
+  <probability rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</probability>
+  <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Elevación de Privilegios</description>
+  <impact rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">8</impact>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Potential_Risk_Elevación de Privilegios_o_0">
+  <rdf:type rdf:resource="#PR_Original"/>
+  <rdf:type rdf:resource="#Risk"/>
+  <rdf:type rdf:resource="#Potential_Risk"/>
+  <probability rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</probability>
+  <impact rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">8</impact>
+  <risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">32</risk_level>
+  <webp:relative_risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">23</webp:relative_risk_level>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Potential_Propagated_Risk_Elevación de Privilegios_o_0">
+  <rdf:type rdf:resource="#PR_Propagated"/>
+  <rdf:type rdf:resource="#Risk"/>
+  <rdf:type rdf:resource="#Potential_Risk"/>
+  <probability rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</probability>
+  <impact rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">8</impact>
+  <risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">32</risk_level>
+  <webp:relative_risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">23</webp:relative_risk_level>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Movimiento_Lateral_1">
+  <rdf:type rdf:resource="#Threat_Propagated"/>
+  <rdf:type rdf:resource="#Threat"/>
+  <affects rdf:resource="#Activo_4"/>
+  <generates rdf:resource="#Compromiso Total de Identidad_p_0"/>
+  <type rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Movimiento Lateral</type>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Compromiso Total de Identidad_p_0">
+  <rdf:type rdf:resource="#FE_Propagated"/>
+  <rdf:type rdf:resource="#Feared_Event"/>
+  <affects rdf:resource="#Activo_4"/>
+  <generates rdf:resource="#Potential_Propagated_Risk_Compromiso Total de Identidad_p_0"/>
+  <propagates_to rdf:resource="#Secuestro_de_Sesión_0"/>
+  <propagates_to rdf:resource="#Secuestro_de_Sesión_1"/>
+  <probability rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</probability>
+  <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Compromiso Total de Identidad</description>
+  <impact rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">10</impact>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Potential_Propagated_Risk_Compromiso Total de Identidad_p_0">
+  <rdf:type rdf:resource="#PR_Propagated"/>
+  <rdf:type rdf:resource="#Risk"/>
+  <rdf:type rdf:resource="#Potential_Risk"/>
+  <probability rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</probability>
+  <impact rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">10</impact>
+  <risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">50</risk_level>
+  <webp:relative_risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">50</webp:relative_risk_level>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Secuestro_de_Sesión_0">
+  <rdf:type rdf:resource="#Threat_Propagated"/>
+  <rdf:type rdf:resource="#Threat"/>
+  <affects rdf:resource="#Activo_3"/>
+  <type rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Secuestro de Sesión</type>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Secuestro_de_Sesión_1">
+  <rdf:type rdf:resource="#Threat_Propagated"/>
+  <rdf:type rdf:resource="#Threat"/>
+  <affects rdf:resource="#Activo_5"/>
+  <generates rdf:resource="#Exfiltración de Llaves API_p_0"/>
+  <type rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Secuestro de Sesión</type>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Exfiltración de Llaves API_p_0">
+  <rdf:type rdf:resource="#FE_Propagated"/>
+  <rdf:type rdf:resource="#Feared_Event"/>
+  <affects rdf:resource="#Activo_5"/>
+  <generates rdf:resource="#Potential_Propagated_Risk_Exfiltración de Llaves API_p_0"/>
+  <probability rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</probability>
+  <description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Exfiltración de Llaves API</description>
+  <impact rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</impact>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Potential_Propagated_Risk_Exfiltración de Llaves API_p_0">
+  <rdf:type rdf:resource="#PR_Propagated"/>
+  <rdf:type rdf:resource="#Risk"/>
+  <rdf:type rdf:resource="#Potential_Risk"/>
+  <probability rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</probability>
+  <impact rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</impact>
+  <risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">28</risk_level>
+  <webp:relative_risk_level rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">24</webp:relative_risk_level>
+</owl:NamedIndividual>
+
+
+</rdf:RDF>

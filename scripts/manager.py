@@ -307,7 +307,7 @@ def risk_assessment(path="../data"):
     
     # == Phase 1: Threat & Propagation Loading ==
     # Load threats from CSV and execute threat propagation algorithm.
-    load_threats(onto, path, propagation_paths)
+    load_threats(onto, path, propagation_paths=propagation_paths)
     onto.save(f"{path}/dra_full.owl")
     propagate_time = time.time()
     logger.info(f"Propagate time: {propagate_time - init_time} seconds")
@@ -345,6 +345,9 @@ def load_threats(o_t, path="../data", propagation_paths=None):
         propagation_paths: Dictionary tracking threat propagation chains to prevent
                           infinite loops. Created if not provided.
     """
+    if propagation_paths is None:
+        propagation_paths = defaultdict(list)
+    
     with o_t:
         # Load threat-to-asset associations from CSV.
         threats = pd.read_csv(f'{path}/threat_assets.csv', dtype={"asset": str})
@@ -379,6 +382,9 @@ def create_threat(o_t, threat, asset, path="../data", propagation_paths=None):
           accidental overwrites if the same threat is created multiple times
         - The threat is marked as Threat_Original (not Threat_Propagated)
     """
+    if propagation_paths is None:
+        propagation_paths = defaultdict(list)
+    
     with o_t:
         # Look up the target asset to ensure it exists before creating threat.
         asset = o_t.search_one(iri=f"*#{asset}")
@@ -421,12 +427,26 @@ def create_feared_event(o_fe, asset, threat, path="../data", propagation_id=None
         propagation_paths: Dictionary mapping propagation_id → list of (threat, asset)
                           tuples already visited (prevents infinite loops).
     """
+    if propagation_paths is None:
+        propagation_paths = defaultdict(list)
+    
     with o_fe:
         # Load threat scenario and feared event catalogs.
         scenarios, fe = _load_threat_catalogues(path)
         asset_name = str(asset).split(".")[1]
         threat_name = str(threat).split('.')[1]
         threat_name = threat_name.rsplit("_", 1)[0]  # Remove numeric suffix.
+        
+        # Generate propagation_id early if not provided.
+        if not propagation_id:
+            # Use threat name and asset as basis for propagation chain ID.
+            propagation_id = f"{threat_name}_{asset_name}"
+        
+        # Track original threat in the propagation path.
+        original_threat_key = list((threat_name, asset_name))
+        if original_threat_key not in propagation_paths[propagation_id]:
+            propagation_paths[propagation_id].append(original_threat_key)
+            logger.debug(f"Tracked original threat {threat_name} on asset {asset_name} in propagation chain {propagation_id}")
         
         # Filter scenarios that apply to this threat type and asset.
         # Scenarios with asset="all" apply globally; otherwise asset-specific.
@@ -458,8 +478,6 @@ def create_feared_event(o_fe, asset, threat, path="../data", propagation_id=None
             create_risk(o_fe, ind, path)
 
             # == Threat Propagation Initiation ==
-            if not propagation_id:
-                propagation_id = ind.name  # Use feared event name as chain ID.
             create_risk_propagated(o_fe, ind)
             logger.debug("Starting propagation process")
             propagate(o_fe, row['FE'], asset_name, propagation_id, ind, path=path, propagation_paths=propagation_paths) 
