@@ -1,4 +1,8 @@
 # Dynamic Risk Assessment Dashboard
+![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-20.10%2B-2496ED?logo=docker&logoColor=white)
+![Docker Compose](https://img.shields.io/badge/Docker%20Compose-v2%2B-2496ED?logo=docker&logoColor=white)
+![Elasticsearch](https://img.shields.io/badge/Elasticsearch-8.8.0-005571?logo=elasticsearch&logoColor=white)
 
 A Flask-based web application for **dynamic cybersecurity risk assessment**, combining OWL ontology modeling with Elasticsearch-backed storage to visualize, compute, and propagate risk scores across system architectures.
 
@@ -10,7 +14,6 @@ A Flask-based web application for **dynamic cybersecurity risk assessment**, com
 - [Architecture](#architecture)
 - [Features](#features)
 - [Data Model](#data-model)
-- [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
   - [Docker (recommended)](#docker-recommended)
   - [Local Development](#local-development)
@@ -105,17 +108,6 @@ The application reads from CSV files in `data/` and persists a computed OWL onto
 Elasticsearch indices mirror these entities with two suffixes:
 - `_o` — **original** (user-defined base entities)
 - `_p` — **propagated** (derived entities from cascading risk analysis)
-
----
-
-## Prerequisites
-
-| Requirement | Version |
-|---|---|
-| Python | 3.11+ |
-| Docker | 20.10+ |
-| Docker Compose | v2+ |
-| Elasticsearch | 8.8.0 (managed via Docker) |
 
 ---
 
