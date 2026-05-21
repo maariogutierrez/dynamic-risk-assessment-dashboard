@@ -248,8 +248,8 @@ Flags:
 │         ├── base.css
 │         └── ...
 │       ├── js/
-  │       ├── assets.js
-  │       └── ...
+│         ├── assets.js
+│         └── ...
 │   └── templates/               # Jinja2 HTML templates
 │       ├── base.html
 │       ├── assets.html
